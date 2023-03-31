@@ -2,6 +2,7 @@ from tkinter import *
 import tkinter.messagebox as messagebox
 from tkinter import ttk
 from os import  system as sys
+from mysql.connector import connect, Error
 #from mysql import
 
 
