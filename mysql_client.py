@@ -3,7 +3,7 @@ from getpass import getpass
 sys('cls')
 
 
-def connection_init(query="SELECT title FROM book"):
+def connection_init(query=str("")):
     try:
         with connect(
             host="localhost",

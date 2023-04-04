@@ -12,7 +12,7 @@ sys('cls')
 
 # constains
 app_title = "app"
-app_resolution = "512x256"
+app_resolution = "800x600"
 
 """
 TOP (по умолчанию, выравнивается по верхней стороне контейнера), 
