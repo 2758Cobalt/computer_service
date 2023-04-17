@@ -3,10 +3,11 @@ import tkinter.messagebox as messagebox
 from tkinter import ttk
 from os import  system as sys
 from mysql.connector import connect, Error
-#from mysql import
 
+#Default variable
+connect_config = ("Cobalt","localhost:2525","Umsf_sqltutor","test_db")
 
-#packages
+#Clean console
 sys('cls')
 
 

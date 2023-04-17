@@ -1,7 +1,7 @@
 from init import *
 from getpass import getpass
 
-def connection_init(query=str(""),_host=str("localhost:2525"),_user=str("Cobalt"),_password=str("Umsf_sqltutor"),_database=str("world")):
+def query(query=str(""),_host=str("localhost:2525"),_user=str("Cobalt"),_password=str("Umsf_sqltutor"),_database=str("world")):
     execute_arrive = []
     try:
         with connect(
