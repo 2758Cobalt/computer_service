@@ -1,8 +1,9 @@
 from init import *
-from getpass import getpass
 
-def query(query=str(""),_host=str("localhost:2525"),_user=str("Cobalt"),_password=str("Umsf_sqltutor"),_database=str("world")):
-    execute_arrive = []
+execute_arrive = []
+
+def connection(query=str(""),_host=str("localhost:2525"),_user=str("Cobalt"),_password=str("Umsf_sqltutor"),_database=str("test_db")):
+    global execute_arrive
     try:
         with connect(
             host=_host[:9],
@@ -18,8 +19,11 @@ def query(query=str(""),_host=str("localhost:2525"),_user=str("Cobalt"),_passwor
                     print(info)
                     execute_arrive.append(info)
             return execute_arrive
-        
+
     except Error as e: # Error panel
         print(e)
         if (e.errno != -1):
             messagebox.showerror("Error",e)
+
+    finally:
+        connection.close()

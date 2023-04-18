@@ -20,6 +20,15 @@ def window_connection():
         data.grid(row=idx,column=1,pady=5) # user field
         
     ttk.Button(new_window,text="Підключитися",width=32,
-               command=lambda: (query("",host.get(),user.get(),password.get(),database.get()), new_window.destroy() )).place(anchor=S,relx=0.5,rely=0.95)
+            command=lambda: (connection("",host.get(),user.get(),password.get(),database.get()), new_window.destroy() )).place(anchor=S,relx=0.5,rely=0.95)
     return (user,host,password,database)
 
+def refresh_table(table,headers,table_data):
+    table["columns"] = headers
+    
+    for header in headers:
+        table.heading(header,text=header,anchor="center")
+        table.column(header,anchor="center")
+
+    for row in table_data:
+        table.insert('','end',values=row)
