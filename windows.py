@@ -11,7 +11,7 @@ def window_connection(root_window): # window
     new_window.geometry("300x300")
     new_window.title("Connect")
 
-    for idx,x in enumerate(["Користувач","Хост","Пароль","База даних"]):
+    for idx,x in enumerate(["User","Host","Password","Database"]):
         Label(new_window,text=x,width=16,anchor="s").grid(row=idx,column=0,pady=5) # Позиціювання елементів 
 
     user = ttk.Entry(new_window) # Поле "користувач"
@@ -23,13 +23,15 @@ def window_connection(root_window): # window
         data.insert(0,connect_config[idx]) # Заповнення полів за замовчуванням (щоб не вводити усі дані вручну)
         data.grid(row=idx,column=1,pady=5) # Позиціювання елементів
 
-    ttk.Button(new_window,text="Підключитися",width=32, # Кнопка
+    ttk.Button(new_window,text="Connect to database",width=32, # Кнопка
 command=lambda: (
     # Отримання введених даних
     root_connection.change_data(user=user.get(),host=host.get(),password=password.get(),database=database.get()), 
                 root_connection.connect(), # Підключення
                 new_window.destroy(),root_window.deiconify()) # Видаленя вікна 
 ).place(anchor=S,relx=0.5,rely=0.95)# Позиціювання елементів
+    
+    new_window.protocol("WM_DELETE_WINDOW",lambda: root_window.quit())# Quit
 # =============================================================
 
 def window_create_table(root_window): # window
@@ -37,26 +39,20 @@ def window_create_table(root_window): # window
     new_table = Tk("creation_tables")
     new_table.resizable(0,0)
     new_table.geometry("300x300")
-    new_table.title("Створення таблиці")
+    new_table.title("Table creation")
     
-    ttk.Label(new_table,text="Назва таблиці",width=28,anchor="s").pack(anchor="center",pady=5)
-    
+    ttk.Label(new_table,text="Назва таблиці",width=28,anchor="s").pack(anchor="center",pady=5)# Label
     
     new_table_name = ttk.Entry(new_table)
-    
 
     new_table_name.pack(anchor=S,pady=5)
-    ttk.Button(new_table,text="Створити таблицю",width=32,
-command=lambda: (root_connection.query(f"""create table {new_table_name.get()} (`book_id` int primary key auto_increment,
-                                                                                `title` varchar(45),
-                                                                                `author` varchar(30),
-                                                                                `price` decimal(8,2),
-                                                                                `amount` int);"""),
+    ttk.Button(new_table,text="Create table",width=32,
+command=lambda: (root_connection.query(f"""create table {new_table_name.get()} (`{new_table_name}id` int primary key auto_increment);"""),
                 new_table.destroy(),
-                root_window.deiconify()
-                )
+                root_window.deiconify())
             ).place(anchor=S,relx=0.5,rely=0.95)
     
+    new_table.protocol("WM_DELETE_WINDOW",lambda: root_window.quit())# Quit
 # =============================================================
 
 def window_drop_table(root_window): # window
@@ -64,19 +60,18 @@ def window_drop_table(root_window): # window
     drop_table = Tk("drop_tables")
     drop_table.resizable(0,0)
     drop_table.geometry("300x300")
-    drop_table.title("Видалення таблиці")
+    drop_table.title("Removing table")
     
-    ttk.Label(drop_table,text="Назва таблиці",width=28,anchor="s").pack(anchor="center",pady=5)
+    ttk.Label(drop_table,text="Table name",width=28,anchor="s").pack(anchor="center",pady=5)# Label
     
     drop_table_name = ttk.Entry(drop_table)
-    
-    
     drop_table_name.pack(anchor=S,pady=5)
     
-    ttk.Button(drop_table,text="Видалити таблицю",width=32,command=lambda:(
+    ttk.Button(drop_table,text="Remove table",width=32,command=lambda:(
                 root_connection.query(f"drop table {drop_table_name.get()};" ),
                 drop_table.destroy(),
                 root_window.deiconify() ) ).place(anchor=S,relx=0.5,rely=0.95)
+    drop_table.protocol("WM_DELETE_WINDOW",lambda: root_window.quit())# Quit
 # =============================================================
 def rewriting_arrives(rows,columns,connection):
 

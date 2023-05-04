@@ -26,7 +26,7 @@ class MySql_connection:
             self.status = True
             
             with self.connection.cursor() as cursor:
-                cursor.execute("show tables")
+                cursor.execute("show databases")
                 for table in cursor:
                     self.tables.append(table[0])
             
