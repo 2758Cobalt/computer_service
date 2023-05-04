@@ -17,7 +17,7 @@ root.configure(background="#1f1f1f")
 window_connection(root)
 
 
-
+#test
 file_menu = Menu(root)
 file_menu.add_cascade(label="Підключення до другої бд",command=lambda: window_connection(root))
 
