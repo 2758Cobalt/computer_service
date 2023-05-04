@@ -1,7 +1,7 @@
 from init import *
 from mysql_client import *
 from windows import *
-
+# course work
 def refresh_event(query_command):
     rewriting_arrives(sys_rows,sys_columns,root_connection.query(query_command))
     
