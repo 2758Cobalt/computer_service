@@ -29,7 +29,7 @@ class MySql_connection:
                 cursor.execute("show databases")
                 for table in cursor:
                     self.tables.append(table[0])
-            
+
         except Error as e:
             print(e)
             if (e.errno != -1):messagebox.showerror("Error",e)
@@ -42,11 +42,11 @@ class MySql_connection:
             try:
                 with self.connection.cursor() as cursor:
                     cursor.execute(query)
-                    
                     for info in cursor:
-                        print(info)
+                        #print(info)
                         sys_execute_arrive.append(info)
                 return (sys_execute_arrive,cursor.description)
+
             except Error as e:
                 print(e)
                 if (e.errno != -1):messagebox.showerror("Error",e)
@@ -79,6 +79,7 @@ class Table(Frame):
                 self.table.column(header,anchor="center")
             for row in self.rows:
                 self.table.insert('','end',values=row)
+
         except Exception as e:
             print(e)
 
