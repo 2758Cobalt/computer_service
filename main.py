@@ -30,17 +30,23 @@ table_menu_labels = ["Add new table","Remove table"]
 
 file_menu = Menu(root) # window menu bar
 table_menu = Menu(tearoff=0) # rmb functional menu
+#etest_menu = Menu(root,tearoff=0)
+
 frame = Frame(root,bg="#2f2f2f")
 tb_select_frame = Frame(root,bg="#2f2f2f") # Table selection frame
+
 table_entry = ttk.Entry(tb_select_frame) # TextField (Entry)
+
 root_table = Table(root,sys_columns,sys_rows) # root table
-#etest_menu = Menu(root,tearoff=0)
+
 window_connection(root) # Callback window of connection
 
 #etest_menu.add_command(label="test")
 #file_menu.add_cascade(label="Test",menu=etest_menu)
 
-file_menu.add_cascade(label="Connect to another database",command=lambda: window_connection(root)) # Menu bar
+# Menu bar
+file_menu.add_cascade(label="Connect to another database",command=lambda: window_connection(root))
+file_menu.add_cascade(label="Price-list",command=lambda: print("price-list"))
 
 # labels of table_menu configure in "table_menu_labels" -> list
 table_menu.add_command(label=table_menu_labels[0],command=lambda: window_table_config(root,"add"))
