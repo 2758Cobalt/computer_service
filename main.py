@@ -26,6 +26,7 @@ root.configure(background="#1f1f1f")
 #=================================
 sys_rows = [] # Список, який містить рядки таблиці
 sys_columns = [] # Список, який містить колонки таблиці
+table_menu_labels = ["Add new table","Remove table"]
 
 file_menu = Menu(root) # window menu bar
 table_menu = Menu(tearoff=0) # rmb menu
@@ -41,13 +42,14 @@ window_connection(root) # Callback window of connection
 
 file_menu.add_cascade(label="Connect to another database",command=lambda: window_connection(root)) # Menu bar
 
-table_menu.add_command(label="Add new table",command=lambda: window_table_config(root,"add"))
-table_menu.add_command(label="Remove table",command=lambda: window_table_config(root,"remove"))
+# labels of table_menu configure in "table_menu_labels" -> list
+table_menu.add_command(label=table_menu_labels[0],command=lambda: window_table_config(root,"add"))
+table_menu.add_command(label=table_menu_labels[1],command=lambda: window_table_config(root,"remove"))
 #=================================
 ttk.Label(tb_select_frame,text="Current table",background="#2f2f2f",foreground="white").grid() # Label
 
 table_textfield.grid(row=1,pady=5,padx=5)
-table_textfield.bind("<Button-3>",get_mouse)
+
 
 tb_select_frame.pack(expand=1,anchor=NW,pady=5,padx=5)
 #=================================
@@ -62,7 +64,9 @@ ttk.Button(frame,text="Update table",width=32,command=lambda: refresh_event(f"se
 ).grid(row=0,column=0,pady=30,padx=10)
 ttk.Button(root,text="Disconnect from the database",width=32,command=lambda: (root_connection.connection.close(), root.quit())).pack(anchor=S,pady=20) # Disconnect
 
-
+#=============binds================
+table_textfield.bind("<Button-3>",get_mouse)
+Balloon(root).bind(table_textfield,"Введіть назву таблиці, яку треба отримати або натисніть праву кнопку миші, щоб відкрити меню управління")# Tooltip table_textfield
 #=================================
 root.protocol("WM_DELETE_WINDOW",lambda:(root_connection.connection.close(),root.quit()))
 root.config(menu=file_menu)
