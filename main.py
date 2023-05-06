@@ -2,21 +2,13 @@ from init import *
 from mysql_client import *
 from windows import *
 
-# course work
 
 def refresh_event(query_command):
-    if table_entry.get() == "" or None: 
-        messagebox.showwarning("Error","TextField \"current table\" is empty!\nEnter table name")
-        table_entry.focus() # Focus on field
-    else:rewriting_arrives(sys_rows,sys_columns,root_connection.query(query_command))
-    
-    root_table.refresh()
+    """Используется для привязки отправки запроса после срабатывания кнопки кнопки"""
 
-def get_mouse(event):
-    x = event.x_root
-    y = event.y_root
-    
-    table_menu.post(x,y)
+    rewriting_arrays(sys_rows,sys_columns,root_connection.query(query_command)) # rewriting arrays
+
+    root_table.refresh() # refresh
 
 #=================================
 root = Tk("main")
@@ -24,57 +16,71 @@ root.title(app_title)
 root.geometry(app_screen)
 root.configure(background="#1f1f1f")
 #=================================
-sys_rows = [] # Список, який містить рядки таблиці
-sys_columns = [] # Список, який містить колонки таблиці
-table_menu_labels = ["Add new table","Remove table"]
 
+sys_rows = [] # table rows
+sys_columns = [] # table columns
+
+#=============Menu================
 file_menu = Menu(root) # window menu bar
-table_menu = Menu(tearoff=0) # rmb functional menu
-#etest_menu = Menu(root,tearoff=0)
 
-frame = Frame(root,bg="#2f2f2f")
-tb_select_frame = Frame(root,bg="#2f2f2f") # Table selection frame
 
-table_entry = ttk.Entry(tb_select_frame) # TextField (Entry)
+#=============add_cascade=========
+file_menu.add_cascade(label="Файл",command=lambda: refresh_event(query_pricelist))
 
-root_table = Table(root,sys_columns,sys_rows) # root table
+tabs_nb = ttk.Notebook(root)
+
+#=============Frame===============
+main_frame = Frame(tabs_nb,bg="#2f2f2f") # main frame
+clients_frame = Frame(tabs_nb,bg="#2f2f2f") # clients frame
+order_frame = Frame(tabs_nb,bg="#2f2f2f") # order frame
+delivery_frame = Frame(tabs_nb,bg="#2f2f2f") # delivery frame
+works_frame = Frame(tabs_nb,bg="#2f2f2f") # delivery frame
+
+buttons_frame = Frame(root,bg="#3f3f3f")
+
 
 window_connection(root) # Callback window of connection
 
-#etest_menu.add_command(label="test")
-#file_menu.add_cascade(label="Test",menu=etest_menu)
 
-# Menu bar
-file_menu.add_cascade(label="Connect to another database",command=lambda: window_connection(root))
-file_menu.add_cascade(label="Price-list",command=lambda: print("price-list"))
+#=============Table===============
+root_table = Table(main_frame,sys_columns,sys_rows)
 
-# labels of table_menu configure in "table_menu_labels" -> list
-table_menu.add_command(label=table_menu_labels[0],command=lambda: window_table_config(root,"add"))
-table_menu.add_command(label=table_menu_labels[1],command=lambda: window_table_config(root,"remove"))
-#=================================
-ttk.Label(tb_select_frame,text="Current table",background="#2f2f2f",foreground="white").grid() # Label
+#============package==============
+main_frame.pack(expand=1,anchor='center',fill=BOTH,pady=20,padx=20) # main frame
 
-table_entry.grid(row=1,pady=5,padx=5)
+root_table.pack(fill=BOTH,expand=1,padx=10,pady=10) # Table
+
+tabs_nb.pack(expand=1,fill=BOTH) # tab
+
+buttons_frame.pack(expand=1,anchor='center',fill=BOTH,pady=20,padx=10) # main btn frame
+
+tabs_nb.add(main_frame,text="Прайс-лист")
+tabs_nb.add(clients_frame,text="Клієнти")
+tabs_nb.add(order_frame,text="Прийняття заяв")
+tabs_nb.add(delivery_frame,text="Доставлення устаткування")
+tabs_nb.add(works_frame,text="Виїздні роботи")
+#============button===============
+
+ttk.Button(buttons_frame,text="Оновити таблицю",width=32,command=lambda: refresh_event(query_pricelist)
+).grid() # Refresh
+
+ttk.Button(buttons_frame,text="Відключитися",width=32,command=lambda: (root_connection.connection.close(), root.quit())
+).grid(column=1,row=0) # Disconnect
 
 
-tb_select_frame.pack(expand=1,anchor=NW,pady=5,padx=5)
-#=================================
+#============binds================
+#Balloon(root).bind(,"")
 
-root_table.pack(fill=BOTH,expand=1,padx=10,pady=20) # Table
 
-ttk.Label(text="Elements",background="#2f2f2f",foreground="white").pack(anchor=N)
-
-frame.pack(expand=1,anchor='center',pady=20,padx=20) # root frame
-
-ttk.Button(frame,text="Update table",width=32,command=lambda: refresh_event(f"select * from {table_entry.get()}") # Update
-).grid(row=0,column=0,pady=30,padx=10)
-ttk.Button(root,text="Disconnect from the database",width=32,command=lambda: (root_connection.connection.close(), root.quit())).pack(anchor=S,pady=20) # Disconnect
-
-#=============binds================
-table_entry.bind("<Button-3>",get_mouse)
-Balloon(root).bind(table_entry,"Введіть назву таблиці, яку треба отримати або натисніть праву кнопку миші, щоб відкрити меню управління")# Tooltip table_textfield
 #=================================
 root.protocol("WM_DELETE_WINDOW",lambda:(root_connection.connection.close(),root.quit()))
 root.config(menu=file_menu)
 root.mainloop()
 #=================================
+
+
+#table_menu = Menu(tearoff=0) # rmb functional menu :25
+#etest_menu = Menu(root,tearoff=0) :26
+#etest_menu.add_command(label="test"):34
+#file_menu.add_cascade(label="Test",menu=etest_menu):35
+#file_menu.add_cascade(label="Connect to another database",command=lambda: window_connection(root)) :39

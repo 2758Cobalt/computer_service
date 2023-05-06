@@ -5,14 +5,14 @@ from Pmw import Balloon
 from os import  system as sys
 from mysql.connector import connect, Error
 
-connect_config = ("Cobalt","localhost:2525","Umsf_sqltutor","test_db") # Default variable
+connect_config = ("Cobalt","localhost:2525","Umsf_sqltutor","course_database") # Default variable
 
 # Clean console
 sys('cls')
 
 
 # constains
-app_title = "Computer Service"
+app_title = "Комп'ютер-Сервіс"
 app_resolution = [800,600]
 app_screen = str(app_resolution[0]) + "x" + str(app_resolution[1])
 """
@@ -42,3 +42,11 @@ W   C   E
 SW  S   SE
 
 """
+
+query_clients = """select `client_id` as "Номер клієнту",`client_name` as "Им'я клієнта",
+`client_surname` as "Призвище клієнта",`client_code` as "Код клієнта",
+`client_register_date` as "Дата реєстрації клієнта" from `clients-data`"""
+
+query_pricelist= """select `list_id` as "Номер листа",`service_price` as "Ціна обслуговування",
+`repair_price` as "Ціна ремонту устаткування",`setup_software_price` as "Ціна встановлення програмного забезпечення" 
+from `price-list`"""
