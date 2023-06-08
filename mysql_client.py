@@ -5,7 +5,6 @@ sys_execute_arrive = []
 class MySql_connection:
     def __init__(self,connection_data):
         self.connection_data = connection_data
-        self.tables = []
         self.status = False
         
     def change_data(self,user,host,password,database):
@@ -24,53 +23,61 @@ class MySql_connection:
                 password=self.connection_data[2],
                 database=self.connection_data[3])
             self.status = True
-            
-            with self.connection.cursor() as cursor:
-                cursor.execute("show databases")
-                for table in cursor:
-                    self.tables.append(table[0])
+            l.info(f"Login...\n{self.connection_data}") # Log connect
 
         except Error as e:
-            print(e)
-            if (e.errno != -1):messagebox.showerror("Error",e)
+            l.error(f"{e} \nCode: {e.errno}") # Log error
+            if e.errno == 2003: # Host Failed
+                l.error("Host is failed") # Log error
+                messagebox.showerror("Помилка","Невірно ведений хост!")
+            
+            elif e.errno == 1045: # User or Passowrd Failed
+                l.error("User or password is failed") # Log error
+                messagebox.showerror("Помилка","Невірно ведене ім'я користувача або пароль. Перевірте введені дані")
+                
+            elif e.errno == 1049: # Database Failed 
+                l.error(f"Database name is failed (db name: {self.connection[3]})") # Log error
+                messagebox.showerror("Помилка",f"Бази даних {self.connection[3]} не існує на сервері.\nМожливо назва бази введена неправильно")
 
     def query(self,query=""):
         sys_execute_arrive.clear()
-        self.tables.clear()
-        if self.status == False: return messagebox.showerror("Виключення","База даних не підключена.\nОновити табилицю неможливо")
+        if self.status == False: 
+            l.error("Database has't been connected")
+            messagebox.showerror("Помилка","База даних не підключена.\nОновити табилицю неможливо")
         else:
             try:
                 with self.connection.cursor() as cursor:
                     cursor.execute(query)
+                    l.info(f"Query: {query}")
                     for info in cursor:
-                        #print(info)
-                        sys_execute_arrive.append(info)
+                        sys_execute_arrive.append(info) # Answer
+                    self.connection.commit()
                 return (sys_execute_arrive,cursor.description)
 
             except Error as e:
-                print(e)
-                if (e.errno != -1):messagebox.showerror("Error",e)
-
+                l.error(e)
+                if (e.errno != -1):messagebox.showerror("Помилка",e)
+    
 
 class Table(Frame):
     def __init__(self, parent=None, headings=tuple(), rows=tuple(),):
         super().__init__(parent)
-        style = ttk.Style()
-        style.configure("Treeview",background="silver",foreground="black",rowheight=50,fieldbackground="white")
-        table = ttk.Treeview(self, show="headings", selectmode="browse")
+        style = Style()
+        style.configure("Treeview",background="red",foreground="black",rowheight=50, fieldbackground="white")
+        table = Treeview(self, show="headings", selectmode="browse")
         style.theme_use("alt")
         scrollbar_x = Scrollbar(self, orient=HORIZONTAL,command=table.xview) # horizontal scrollbar
         scrollbar_y = Scrollbar(self,command=table.yview) # vertical scrollbar
         table.configure(xscrollcommand=scrollbar_x.set,yscrollcommand=scrollbar_y.set)
         scrollbar_x.pack(side=BOTTOM, fill=X)
         scrollbar_y.pack(side=RIGHT, fill=Y)
-        table.pack(expand=True, fill=BOTH)
+        table.pack(expand=True, fill='both')
 
         self.table = table
         self.headings = headings
         self.rows = rows
 
-    def refresh(self):
+    def refresh_table(self):
         try:
             self.table.delete(*self.table.get_children())
             self.table["columns"] = self.headings
@@ -81,7 +88,5 @@ class Table(Frame):
                 self.table.insert('','end',values=row)
 
         except Exception as e:
-            print(e)
-
-    def add_column(self,header="NullHeader"):
-        self.headings.append(header)
+            l.error(e)
+            messagebox.showwarning("Увіга","Виникла помилка при оновлені таблиці")
