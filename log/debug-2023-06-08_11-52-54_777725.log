@@ -1,0 +1,3 @@
+main.py 11:52:54 <--------------Start logging--------------->
+mysql_client.py 11:52:57 1049 (42000): Unknown database 'computer_services' 
+Code: 1049

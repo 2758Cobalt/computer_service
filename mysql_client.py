@@ -36,8 +36,8 @@ class MySql_connection:
                 messagebox.showerror("Помилка","Невірно ведене ім'я користувача або пароль. Перевірте введені дані")
                 
             elif e.errno == 1049: # Database Failed 
-                l.error(f"Database name is failed (db name: {self.connection[3]})") # Log error
-                messagebox.showerror("Помилка",f"Бази даних {self.connection[3]} не існує на сервері.\nМожливо назва бази введена неправильно")
+                l.error(f"Database name is failed") # Log error
+                messagebox.showerror("Помилка",f"Введеної бази даних не існує на сервері.\nМожливо назва бази введена неправильно")
 
     def query(self,query=""):
         sys_execute_arrive.clear()

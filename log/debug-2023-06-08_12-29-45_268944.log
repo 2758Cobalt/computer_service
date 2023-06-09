@@ -1,0 +1,24 @@
+main.py 12:29:45 <--------------Start logging--------------->
+mysql_client.py 12:29:47 Login...
+['Cobalt', 'localhost:2525', 'Umsf_sqltutor', 'computer_service']
+mysql_client.py 12:29:48 Query: SELECT manager_id as "Індекс менеджера", manager_name as "Ім'я менеджера", manager_surname as "Прізвище менеджера" FROM manager order by manager_id ASC LIMIT 100;
+windows.py 12:29:50 Entry is empty
+mysql_client.py 12:29:51 Login...
+['Cobalt', 'localhost:2525', 'Umsf_sqltutor', 'computer_service']
+mysql_client.py 12:29:53 Query: select `client_id` as "Номер клієнту",`client_name` as "Им'я клієнта", `client_surname` as "Призвище клієнта",
+`client_register_date` as "Дата реєстрації клієнта",`client_address` as "Адреса клієнта",`client_number_phone` as "Номер телефону", manager_manager_id as "Індекс обслуговуючого менеджера" from `clients_data` order by client_id ASC LIMIT 100;
+mysql_client.py 12:29:53 Query: select `client_id` as "Номер клієнту",`client_name` as "Им'я клієнта", `client_surname` as "Призвище клієнта",
+`client_register_date` as "Дата реєстрації клієнта",`client_address` as "Адреса клієнта",`client_number_phone` as "Номер телефону", manager_manager_id as "Індекс обслуговуючого менеджера" from `clients_data` order by client_id ASC LIMIT 100;
+windows.py 12:29:55 Entry is empty
+mysql_client.py 12:29:56 Query: select `list_id` as "Номер послуги",`service_price` as "Ціна обслуговування",
+`repair_price` as "Ціна ремонту устаткування",`setup_software_price` as "Ціна встановлення програмного забезпечення", `new_pc_price` as "Ціна нового пк", `performers_performers_id` as "Код виконавця", `manager_manager_id` as "Код менеджера" from `pricelist` order by list_id LIMIT 100;
+windows.py 12:29:58 Entry is empty
+mysql_client.py 12:29:59 Login...
+['Cobalt', 'localhost:2525', 'Umsf_sqltutor', 'computer_service']
+mysql_client.py 12:29:59 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ', , , ,, )' at line 4
+mysql_client.py 12:30:3 Query: select proposal_id as "Індекс послуги", proposal_type as "Вид послуги", proposal_register_date as "Дата замовлення послуги", performers_performer_id as "Індекс виконавця цієї послуги", clients_data_client_id as "Код клієнта-замовника"  from proposals order by proposal_id ASC LIMIT 100;
+windows.py 12:30:5 Entry is empty
+mysql_client.py 12:30:6 Login...
+['Cobalt', 'localhost:2525', 'Umsf_sqltutor', 'computer_service']
+mysql_client.py 12:30:6 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ', )' at line 4
+main.py 12:30:9 Session is closed

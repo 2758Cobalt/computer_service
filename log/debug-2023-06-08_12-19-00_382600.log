@@ -1,0 +1,6 @@
+main.py 12:19:0 <--------------Start logging--------------->
+mysql_client.py 12:19:2 Login...
+['Cobalt', 'localhost:2525', 'Umsf_sqltutor', 'computer_service']
+mysql_client.py 12:19:3 Query: select `client_id` as "Номер клієнту",`client_name` as "Им'я клієнта", `client_surname` as "Призвище клієнта",
+`client_register_date` as "Дата реєстрації клієнта",`client_address` as "Адреса клієнта",`client_number_phone` as "Номер телефону", manager_manager_id as "Індекс обслуговуючого менеджера" from `clients_data` order by client_id ASC LIMIT 100;
+main.py 12:19:9 Session is closed

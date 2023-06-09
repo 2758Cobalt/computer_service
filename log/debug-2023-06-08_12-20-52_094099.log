@@ -1,0 +1,20 @@
+main.py 12:20:52 <--------------Start logging--------------->
+mysql_client.py 12:20:54 Login...
+['Cobalt', 'localhost:2525', 'Umsf_sqltutor', 'computer_service']
+mysql_client.py 12:20:54 Query: select `client_id` as "Номер клієнту",`client_name` as "Им'я клієнта", `client_surname` as "Призвище клієнта",
+`client_register_date` as "Дата реєстрації клієнта",`client_address` as "Адреса клієнта",`client_number_phone` as "Номер телефону", manager_manager_id as "Індекс обслуговуючого менеджера" from `clients_data` order by client_id ASC LIMIT 100;
+mysql_client.py 12:21:22 Query: insert into clients_data (client_name, client_surname, client_register_date, client_address, client_number_phone, manager_manager_id)
+                            values
+                            ("Namte", "Test",
+                            "2020-02-02", 
+                            "asdkmfa", "+380630607765", 3)
+mysql_client.py 12:21:25 Query: SELECT manager_id as "Індекс менеджера", manager_name as "Ім'я менеджера", manager_surname as "Прізвище менеджера" FROM manager order by manager_id ASC LIMIT 100;
+mysql_client.py 12:21:25 Query: select `client_id` as "Номер клієнту",`client_name` as "Им'я клієнта", `client_surname` as "Призвище клієнта",
+`client_register_date` as "Дата реєстрації клієнта",`client_address` as "Адреса клієнта",`client_number_phone` as "Номер телефону", manager_manager_id as "Індекс обслуговуючого менеджера" from `clients_data` order by client_id ASC LIMIT 100;
+mysql_client.py 12:21:27 Query: select `client_id` as "Номер клієнту",`client_name` as "Им'я клієнта", `client_surname` as "Призвище клієнта",
+`client_register_date` as "Дата реєстрації клієнта",`client_address` as "Адреса клієнта",`client_number_phone` as "Номер телефону", manager_manager_id as "Індекс обслуговуючого менеджера" from `clients_data` order by client_id DESC LIMIT 100;
+mysql_client.py 12:21:32 Login...
+['Cobalt', 'localhost:2525', 'Umsf_sqltutor', 'computer_service']
+mysql_client.py 12:21:32 Query: delete from `clients_data` 
+                where client_id = 21
+main.py 12:21:33 Session is closed
