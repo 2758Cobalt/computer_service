@@ -37,9 +37,10 @@ class MySql_connection:
                 
             elif e.errno == 1049: # Database Failed 
                 l.error(f"Database name is failed") # Log error
-                messagebox.showerror("Помилка",f"Введеної бази даних не існує на сервері.\nМожливо назва бази введена неправильно")
+                messagebox.showerror("Помилка","Введеної бази даних не існує на сервері.\nМожливо назва бази введена неправильно")
+                
 
-    def query(self,query=""):
+    def query(self,query="",commit=False):
         sys_execute_arrive.clear()
         if self.status == False: 
             l.error("Database has't been connected")
@@ -51,12 +52,22 @@ class MySql_connection:
                     l.info(f"Query: {query}")
                     for info in cursor:
                         sys_execute_arrive.append(info) # Answer
+                    cursor.close()
                     self.connection.commit()
                 return (sys_execute_arrive,cursor.description)
 
             except Error as e:
                 l.error(e)
-                if (e.errno != -1):messagebox.showerror("Помилка",e)
+                
+                if e.errno == 1406:
+                    l.error(f"Data too long") # Log error
+                    messagebox.showerror("Помилка","Перевірте правильність даних")
+                
+                elif e.errno == 1265:
+                    l.error(f"Data truncated") # Log error
+                    messagebox.showerror("Помилка","У полі \"Послуга\" задана не існуюча послуга")
+                
+                else: messagebox.showerror("Помилка",e)
     
 
 class Table(Frame):

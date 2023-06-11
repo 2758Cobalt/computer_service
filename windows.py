@@ -5,7 +5,7 @@ root_connection = MySql_connection(connection_data=[]) # default | test
 
 connect_config = ("Cobalt","localhost:2525","Umsf_sqltutor","computer_service") # Default variable
 
-tables_text = ["clients","managers","pricelist","proposals","performers"]
+tables_text = ["clients","managers","pricelist","proposals","performers","view_1","view_2"]
     
 def entry_check(entries):
     try:
@@ -71,7 +71,7 @@ def rewriting_arrays(rows, columns, connection):
         return rows, columns
     
     except Exception as e:
-        l.warning(f"Error overwriting data")
+        l.error(f"Error overwriting data")
 # =============================================================
 
 def add_item(table_name):
@@ -85,141 +85,143 @@ def add_item(table_name):
         window.protocol("WM_DELETE_WINDOW", lambda: window.destroy())
         
         add_button = Button(window, text="Додати запис до таблиці", width=24) 
-        
+
         if table_name == tables_text[0]: # Clients
             
-            client_labels = ["Ім'я та прізвище клієнту", "Дата реєстрації", "Адреса клієнта", "Номер телефону", "Індекс обслуговуючого мереджера"]
+            client_columns = ["Ім'я та прізвище клієнту", "Дата реєстрації", "Адреса клієнта", "Номер телефону"]
             
-            for idx, label_text in enumerate(client_labels):
+            for idx, label_text in enumerate(client_columns):
                 label = Label(window, text=label_text, background="#4f4f4f", foreground="white").grid(row=idx, column=0, padx=10, pady=5)
-            
-            if table_name == "clients":
+                
+                client_name_entry = Entry(window, width=32) # Client name/surname entry
+                client_reg_date_entry = Entry(window, width=18, justify='center')
+                client_address_entry = Entry(window, width=18, justify='center')
+                client_number_phone = Entry(window, width=18)
+                
+                for idx, entry in enumerate([client_name_entry, client_reg_date_entry, client_address_entry, client_number_phone]):
+                    entry.grid(row=idx, column=1, pady=5)  # client name and surname
 
-                    # Client name/surname entry
-                    client_name_entry = Entry(window, width=32)
-                    client_reg_date_entry = Entry(window, width=18, justify='center')
-                    client_address_entry = Entry(window, width=18, justify='center')
-                    client_number_phone = Entry(window, width=18)
-                    client_manager_id_entry = Entry(window, justify='center')
-                    
-                    for idx, entry in enumerate([client_name_entry, client_reg_date_entry, client_address_entry, client_number_phone, client_manager_id_entry]):
-                        entry.grid(row=idx, column=1, pady=5)  # client name and surname
-
-                    # Add button command
-                    add_button.configure(command=lambda: (
-                        entry_check([client_name_entry.get(), client_reg_date_entry.get(), client_address_entry.get(), client_number_phone.get(), client_manager_id_entry.get()]),
-                        root_connection.query(f"""insert into clients_data (client_name, client_surname, client_register_date, client_address, client_number_phone, manager_manager_id)
-                            values
-                            (\"{client_name_entry.get().split()[0]}\", \"{client_name_entry.get().split()[1]}\",
-                            \"{client_reg_date_entry.get()}\", 
-                            \"{client_address_entry.get()}\", \"{client_number_phone.get()}\", {int(client_manager_id_entry.get())})"""), # Получение данных из полей _entry методом get()
-                    ))
+                # Add button command
+                add_button.configure(command=lambda: (
+                    entry_check([client_name_entry.get(), client_reg_date_entry.get(), client_address_entry.get(), client_number_phone.get()]),
+                    root_connection.query(f"""INSERT INTO `clients` (client_name, client_surname, client_register_date, client_address, client_number_phone)
+                        VALUES
+                        ('{client_name_entry.get().split()[0]}', '{client_name_entry.get().split()[1]}',
+                        '{client_reg_date_entry.get()}', 
+                        '{client_address_entry.get()}', '{client_number_phone.get()}')""",True),
+                    window.destroy()
+                ))
 
         elif table_name == tables_text[1]: # Manager
             # Manager name/surname entry
             Label(window, text="Ім'я та прізвище менеджера", background="#4f4f4f",foreground="white").grid(row=0, column=0, padx=10, pady=5)
+            Label(window, text="Індекс клієнта", background="#4f4f4f",foreground="white").grid(row=1, column=0, padx=10, pady=5)
             
-            manager_name_entry = Entry(window, width=32) # manager name and surname
+            m_name_entry = Entry(window, width=32) # manager name and surname
+            m_client_id_entry = Entry(window, width=32) # manager name and surname
             
-            manager_name_entry.grid(row=0, column=1, padx=10, pady=5)  
+            m_name_entry.grid(row=0, column=1, padx=10, pady=5)
+            m_client_id_entry.grid(row=1, column=1, padx=10, pady=5)
 
             # Add button command
             add_button.configure(command=lambda: (
-                entry_check([manager_name_entry.get()]),
+                entry_check([m_name_entry.get(),m_client_id_entry.get()]),
                 root_connection.connect(),
-                root_connection.query(f"""insert into `manager` (manager_name,manager_surname) 
-                    values
-                    (\"{manager_name_entry.get().split()[0]}\",
-                    \"{manager_name_entry.get().split()[1]}\")"""),
+
+                root_connection.query(f"""INSERT INTO `manager` (manager_name, manager_surname, `clients_client_id`) 
+                    VALUES ('{m_name_entry.get().split()[0]}','{m_name_entry.get().split()[1]}', {m_client_id_entry.get()})""",True),
                 window.destroy()
             ))
 
         elif table_name == tables_text[2]: # Pricelist
             
-            pricelist_labels = ["Ціна за доставку обладнання", "Ціна за ремонт", "Ціна за налаштування ПЗ", "Ціна за новий пк", "Індекс виконавця","Індекс менеджеру"]
+            pricelist_labels = ["Індекс листа","Ціна за доставку обладнання", "Ціна за ремонт", "Ціна за налаштування ПЗ", "Ціна за новий пк", "Індекс виконавця","Код замовлення"]
         
             for idx, label_text in enumerate(pricelist_labels):
-                label = Label(window, text=label_text, background="#4f4f4f", foreground="white")
-                label.grid(row=idx, column=0, padx=10, pady=5)
+                Label(window, text=label_text, background="#4f4f4f", foreground="white").grid(row=idx, column=0, padx=10, pady=5)
             
-            pricelist_service_entry = Entry(window, width=10, justify='center')
-            pricelist_repair_entry = Entry(window, width=10, justify='center')
-            pricelist_setup_soft_entry = Entry(window, width=18, justify='center')
-            pricelist_new_pc = Entry(window, width=18, justify='center')
-            pricelist_performer_id = Entry(window, width=18, justify='center')
-            pricelist_manager_id = Entry(window, width=18, justify='center')
+            pl_id_entry = Entry(window, width=8, justify='center')
+            pl_shipping_entry = Entry(window, width=8, justify='center')
+            pl_repair_entry = Entry(window, width=8, justify='center')
+            pl_setup_soft_entry = Entry(window, width=8, justify='center')
+            pl_new_pc = Entry(window, width=8, justify='center')
+            pl_performer_id = Entry(window, width=8, justify='center')
+            pl_proposal_id = Entry(window, width=8, justify='center')
             
-            for idx, entry_p in enumerate([pricelist_service_entry, pricelist_repair_entry, pricelist_setup_soft_entry, pricelist_new_pc, pricelist_performer_id, pricelist_manager_id]):
+            for idx, entry_p in enumerate([pl_id_entry,pl_shipping_entry, pl_repair_entry, pl_setup_soft_entry, pl_new_pc, pl_performer_id, pl_proposal_id]):
                 entry_p.grid(row=idx, column=1, padx=10, pady=5)
             
             # Add button command
             add_button.configure(command=lambda: (
-                entry_check([pricelist_service_entry.get(),pricelist_repair_entry.get(),pricelist_setup_soft_entry.get(),pricelist_new_pc.get(),
-                            pricelist_performer_id.get(),pricelist_manager_id.get()]),
+                entry_check([pl_shipping_entry.get(),pl_repair_entry.get(),pl_setup_soft_entry.get(),pl_new_pc.get(),
+                            pl_performer_id.get(),pl_proposal_id.get()]),
                 root_connection.connect(),
-                root_connection.query(f"""INSERT INTO `price-list` 
-                (`service_price`, `repair_price`, `setup_software_price`, `new_pc_price`, `performers_performers_id`, `manager_manager_id`) 
+                root_connection.query(f"""INSERT INTO `pricelist` 
+                (`list_id`,`shipping_price`, `repair_price`, `setup_software_price`, `new_pc_price`, `performers_performer_id`, `proposals_proposal_id`) 
                 VALUES 
-                ({pricelist_service_entry.get()}, {pricelist_repair_entry.get()}, {pricelist_setup_soft_entry.get()}, {pricelist_new_pc.get()},{pricelist_performer_id.get()}, {pricelist_manager_id.get()});
-                """),
+                ({pl_id_entry.get()}, {pl_shipping_entry.get()}, {pl_repair_entry.get()}, {pl_setup_soft_entry.get()}, {pl_new_pc.get()},{pl_performer_id.get()}, {pl_proposal_id.get()});
+                """,True),
                 window.destroy()
             ))
 
         elif table_name == tables_text[3]: # Proposals
 
-            proposals_labels = ["Замовлення","Дата реєстрації замовлення","Індекс виконавця","Індекс клієнту"]
-
+            proposals_labels = ["Індекс замовлення","Послуга","Дата реєстрації замовлення","Індекс менеджера"]
+            pr_types = ["Ремонт","Встановлення ПЗ","Новий PC","Достака обладнання"]
             for idx, label_text in enumerate(proposals_labels):
-                label = Label(window, text=label_text, background="#4f4f4f",foreground="white")
-                label.grid(row=idx, column=0, padx=10, pady=5)
+                Label(window, text=label_text, background="#4f4f4f",foreground="white").grid(row=idx, column=0, padx=10, pady=5)
 
-            proposals_type_entry = Entry(window, width=24)
-            proposals_reg_date_entry = Entry(window, width=18, justify='center')
-            proposals_id_entry = Entry(window, width=16)
-            proposals_client_id_entry = Entry(window, width=16)
+            pr_id_entry = Entry(window, width=10, justify='center')
+            pr_type_combo = Combobox(window, textvariable="Ремонт", values=pr_types, state="readonly")
+            pr_type_combo.current(0)
+            pr_reg_date_entry = Entry(window, width=24, justify='center')
+            pr_manager_id_entry = Entry(window, width=8, justify='center')
 
-            for idx, entry in enumerate([proposals_type_entry,proposals_reg_date_entry,proposals_id_entry,proposals_client_id_entry]):
+            for idx, entry in enumerate([pr_id_entry,pr_type_combo,pr_reg_date_entry,pr_manager_id_entry]):
                 entry.grid(row=idx, column=1, padx=10, pady=5)
 
             # Add button command
             add_button.configure(command=lambda: (
-                entry_check([proposals_type_entry.get(),proposals_reg_date_entry.get(),proposals_id_entry.get(),proposals_client_id_entry.get()]),
+                entry_check([pr_id_entry,pr_type_combo.get(),pr_reg_date_entry.get(),pr_manager_id_entry.get()]),
                 root_connection.connect(),
                 root_connection.query(f"""INSERT INTO `proposals` 
-                (`proposals_type`, `proposals_register_data`, `performers_performers_id`, `clients_data_client_id`) 
+                (`proposal_id`,`proposal_type`, `proposal_register_date`, `manager_manager_id`) 
                 VALUES 
-                (\"{proposals_type_entry.get()}\", \"{proposals_reg_date_entry.get()}\", {proposals_id_entry.get()}, {proposals_client_id_entry.get()});
-                """),
+                ('{pr_id_entry.get()}','{pr_type_combo.get()}', '{pr_reg_date_entry.get()}', '{pr_manager_id_entry.get()}');""",True),
                 window.destroy()
             ))
 
         elif table_name == tables_text[4]: # Perfomers
-            performers_labels = ["Код замовлення","Початок виконання замовлення"]
+            performers_columns = ["Індекс виконавця","Ім'я та прізвище виконавця","Код замовлення","Початок виконання замовлення"]
             
-            performers_num_to_code_entry = Entry(window, width=12) # Performer num to code entry
-            performers_startwork_date_entry = Entry(window, width=18) # Performer startwork date entry
+            per_id_entry = Entry(window, width=12) # Performer id
+            per_name_entry = Entry(window, width=12) # Performer name and surname
+            per_number_proposal_entry = Entry(window, width=12) # Performer num to code entry
+            per_startwork_date_entry = Entry(window, width=18) # Performer startwork date entry
             
-            for idx, label_text in enumerate(performers_labels):
-                label = Label(window, text=label_text, background="#4f4f4f", foreground="white")
-                label.grid(row=idx, column=0, padx=10, pady=5)
+            for idx, label_text in enumerate(performers_columns):
+                Label(window, text=label_text, background="#4f4f4f", foreground="white").grid(row=idx, column=0, padx=10, pady=5)
             
-            for idx, entry in enumerate([performers_num_to_code_entry,performers_startwork_date_entry]):
+            for idx, entry in enumerate([per_id_entry,per_name_entry,per_number_proposal_entry,per_startwork_date_entry]):
                 entry.grid(row=idx, column=1, padx=10, pady=5)
 
             # Add button command
             add_button.configure(command=lambda: (
-                entry_check([performers_num_to_code_entry.get(),performers_startwork_date_entry.get()]),
+                entry_check([per_name_entry.get(),per_number_proposal_entry.get(),per_startwork_date_entry.get()]), # EntryField Check
                 root_connection.connect(),
                 root_connection.query(f"""INSERT INTO `performers` 
-                (`performers_num_to_clientcode`, `performers_startwork_date`) 
+                (`performer_id`,`performer_name`,`performer_surname`,`performer_number_proposal`, `performer_startwork_date`) 
                 VALUES 
-                ({performers_num_to_code_entry.get()}, {performers_startwork_date_entry.get()});
-                """),
-                window.destroy()
+                ('{per_id_entry.get()}','{per_name_entry.get().split()[0]}', '{per_name_entry.get().split()[1]}',
+                {per_number_proposal_entry.get()}, '{per_startwork_date_entry.get()}');""",True),
+                window.destroy() # Window Destroy
             ))
+        
         add_button.place(anchor=S, relx=0.5, rely=0.95)
 
-    except Exception: l.warning("Entry is empty")
+    except Exception as e: 
+        l.warning("Entry is empty")
+        print(e)
 
 # =============================================================
 
@@ -245,8 +247,8 @@ def delete_item(table_name):
             delete_button.configure(command=lambda: (
                 entry_check([client_id_entry.get()]),
                 root_connection.connect(),
-                root_connection.query(f"""delete from `clients_data` 
-                    where client_id = {client_id_entry.get()}"""),
+                root_connection.query(f"""delete from `clients` 
+                    where client_id = {client_id_entry.get()}""",True),
                 window.destroy()
             ))
 
@@ -261,11 +263,11 @@ def delete_item(table_name):
                 entry_check([manager_id_entry.get()]),
                 root_connection.connect(),
                 root_connection.query(f"""delete from `manager` 
-                    where manager_id = {manager_id_entry.get()}"""),
+                    where manager_id = {manager_id_entry.get()}""",True),
                 window.destroy()
             ))
 
-        elif table_name == tables_text[2]: # Price-list
+        elif table_name == tables_text[2]: # Pricelist
         
             label = Label(window, text="Індекс листу", background="#4f4f4f", foreground="white")
             label.grid(row=0, column=0, padx=10, pady=5)
@@ -277,9 +279,9 @@ def delete_item(table_name):
             delete_button.configure(command=lambda: (
                 entry_check([[pricelist_listid.get()]]),
                 root_connection.connect(),
-                root_connection.query(f"""delete from `price-list` 
+                root_connection.query(f"""delete from `pricelist` 
                     where list_id = {pricelist_listid.get()}
-                """),
+                """,True),
                 window.destroy()
             ))
 
@@ -296,8 +298,8 @@ def delete_item(table_name):
                 entry_check([proposals_id.get()]),
                 root_connection.connect(),
                 root_connection.query(f"""delete from `proposals` 
-                    where proposals_id = {proposals_id.get()}
-                """),
+                    where proposal_id = {proposals_id.get()}
+                """,True),
                 window.destroy()
             ))
 
@@ -313,8 +315,8 @@ def delete_item(table_name):
                 entry_check([performers_id.get()]),
                 root_connection.connect(),
                 root_connection.query(f"""delete from `performers` 
-                    where performers_id = {performers_id.get()}
-                """),
+                    where performer_id = {performers_id.get()}
+                """,True),
                 window.destroy()
             ))
 
@@ -334,52 +336,53 @@ def edit_item(table_name):
     edit_button = Button(window, text="Змінити запис у таблиці") # edit button
     
     if table_name == tables_text[0]: # Clients
-        client_labels = ["Індекс клієнта", "Им'я та прізвище клієнта", "Адреса клієнта", "Дата реєстрації", "Номер телефону", "Індекс мереджера"]
+        client_columns = ["Індекс клієнта","Ім'я та прізвище клієнту", "Дата реєстрації", "Адреса клієнта", "Номер телефону"]
     
-        for idx, label_text in enumerate(client_labels):
-            Label(window, text=label_text, background="#4f4f4f", foreground="white").grid(row=idx, column=0, padx=10, pady=5)
+        for idx, label_text in enumerate(client_columns):
+            label = Label(window, text=label_text, background="#4f4f4f", foreground="white").grid(row=idx, column=0, padx=10, pady=5)
         
-        # Client name/surname entry
-        client_id_entry = Entry(window, width=16,justify='center')
-        client_name_entry = Entry(window, width=32)
-        client_address_entry = Entry(window, width=18, justify='center')
+        client_id_entry = Entry(window, width=32) # Client name/surname entry
+        client_name_entry = Entry(window, width=32) # Client name/surname entry
         client_reg_date_entry = Entry(window, width=18, justify='center')
+        client_address_entry = Entry(window, width=18, justify='center')
         client_number_phone = Entry(window, width=18)
-        client_manager_id_entry = Entry(window, justify='center')
         
-        for idx, entry in enumerate([client_id_entry,client_name_entry, client_address_entry, client_reg_date_entry, client_number_phone, client_manager_id_entry]):
+        for idx, entry in enumerate([client_id_entry,client_name_entry, client_reg_date_entry, client_address_entry, client_number_phone]):
             entry.grid(row=idx, column=1, pady=5)  # client name and surname
 
         edit_button.configure(command=lambda: (
-            entry_check([client_id_entry.get(),client_name_entry.get(),client_address_entry.get(),client_reg_date_entry.get(),client_number_phone.get(),client_manager_id_entry.get()]),
+            entry_check([client_id_entry.get(),client_name_entry.get(),client_reg_date_entry.get(),client_address_entry.get(),client_number_phone.get()]),
             root_connection.connect(),
-            root_connection.query(f"""UPDATE `clients_data` SET `client_name` = '{client_name_entry.get().split()[0]}',
-                                `client_surname` = '{client_name_entry.get().split()[1]}', `client_code`={client_address_entry.get()},
-                                `client_register_date` = '{client_reg_date_entry.get()}', `client_number_phone` = '{client_number_phone.get()}',
-                                `manager_manager_id` = '{client_manager_id_entry.get()}' WHERE (`client_id` = '{client_id_entry.get()}');"""), # Получение данных из полей _entry методом get()
+            root_connection.query(f"""UPDATE `clients` SET `client_name` = '{client_name_entry.get().split()[0]}',
+                                `client_surname` = '{client_name_entry.get().split()[1]}',
+                                `client_register_date` = '{client_reg_date_entry.get()}',
+                                `client_address` = '{client_address_entry.get()}',
+                                `client_number_phone` = '{client_number_phone.get()}' WHERE `client_id` = {client_id_entry.get()};""",True),
             window.destroy() 
         ))
 
     elif table_name == tables_text[1]: # Manager
         
-        for idx, label_text in enumerate(["Введіть індекс(id) менеджера","Им'я та прізвище менеджера"]):
+        for idx, label_text in enumerate(["Введіть індекс(id) менеджера","Им'я та прізвище менеджера","Індекс клієнта"]):
             Label(window, text=label_text, background="#4f4f4f", foreground="white").grid(row=idx, column=0, padx=10, pady=5)
 
         manager_id_entry = Entry(window)
         manager_name_entry = Entry(window, width=32) # manager name and surname
+        manager_client_id_entry = Entry(window, width=32) # client_id
         
-        for idx, entry in enumerate([manager_id_entry,manager_name_entry]):
+        for idx, entry in enumerate([manager_id_entry,manager_name_entry,manager_client_id_entry]):
             entry.grid(row=idx, column=1, padx=10, pady=5)  
         
         edit_button.configure(command=lambda: (
             entry_check([manager_id_entry.get(),manager_name_entry.get()]),
             root_connection.connect(),
             root_connection.query(f"""UPDATE `manager` SET `manager_name` = '{manager_name_entry.get().split()[0]}',
-                                `manager_surname` = '{manager_name_entry.get().split()[1]}' WHERE (`manager_id` = '{manager_id_entry.get()}');"""),
+                                `manager_surname` = '{manager_name_entry.get().split()[1]}',
+                                `clients_client_id` = '{manager_client_id_entry.get()}' WHERE (`manager_id` = '{manager_id_entry.get()}');""",True),
             window.destroy() 
         ))
     
-    elif table_name == tables_text[2]: # Price-list
+    elif table_name == tables_text[2]: # Pricelist
         pricelist_labels = ["Індекс листа","Ціна за доставку обладнання", "Ціна за ремонт", "Ціна за налаштування ПЗ", "Ціна за новий пк", "Індекс виконавця","Індекс менеджеру"]
     
         for idx, label_text in enumerate(pricelist_labels):
@@ -387,70 +390,78 @@ def edit_item(table_name):
             label.grid(row=idx, column=0, padx=10, pady=5)
 
         pricelist_id_entry = Entry(window, width=10, justify='center')
-        pricelist_service_entry = Entry(window, width=10, justify='center')
+        pl_shipping_entry = Entry(window, width=10, justify='center')
         pricelist_repair_entry = Entry(window, width=10, justify='center')
         pricelist_setup_soft_entry = Entry(window, width=18, justify='center')
         pricelist_new_pc = Entry(window, width=18, justify='center')
         pricelist_performer_id = Entry(window, width=18, justify='center')
-        pricelist_manager_id = Entry(window, width=18, justify='center')
+        pl_proposals_id = Entry(window, width=18, justify='center')
         
-        for idx, entry in enumerate([pricelist_id_entry,pricelist_service_entry, pricelist_repair_entry, pricelist_setup_soft_entry, pricelist_new_pc, pricelist_performer_id, pricelist_manager_id]):
+        for idx, entry in enumerate([pricelist_id_entry,pl_shipping_entry, pricelist_repair_entry, pricelist_setup_soft_entry, pricelist_new_pc, pricelist_performer_id, pl_proposals_id]):
             entry.grid(row=idx, column=1, padx=10, pady=5)
         
         # Add button command
         edit_button.configure(command=lambda: (
-            entry_check([pricelist_id_entry.get(),pricelist_service_entry.get(),pricelist_repair_entry.get(),pricelist_setup_soft_entry.get(),pricelist_new_pc.get(),pricelist_performer_id.get(),pricelist_manager_id.get()]),
+            entry_check([pricelist_id_entry.get(),pl_shipping_entry.get(),pricelist_repair_entry.get(),pricelist_setup_soft_entry.get(),pricelist_new_pc.get(),pricelist_performer_id.get(),pl_proposals_id.get()]),
             root_connection.connect(),
-            root_connection.query(f"""UPDATE `price-list` SET `service_price` = '{pricelist_service_entry.get()}',
+            root_connection.query(f"""UPDATE `pricelist` SET `shipping_price` = '{pl_shipping_entry.get()}',
                                 `repair_price` = '{pricelist_repair_entry.get()}', `setup_software_price` = '{pricelist_setup_soft_entry.get()}',
-                                `new_pc_price` = '{pricelist_new_pc.get()}', `performers_performers_id` = '{pricelist_performer_id.get()}',
-                                `manager_manager_id` = '{pricelist_manager_id.get()}' 
-                                WHERE (`list_id` = '{pricelist_id_entry.get()}');"""),
+                                `new_pc_price` = '{pricelist_new_pc.get()}', `performers_performer_id` = '{pricelist_performer_id.get()}',
+                                `proposals_proposal_id` = '{pl_proposals_id.get()}' 
+                                WHERE (`list_id` = '{pricelist_id_entry.get()}');""",True),
             window.destroy()
         ))
     
     elif table_name == tables_text[3]: # Proposals
-        for idx, label_text in enumerate(["Індекс замовлення","Тип замовлення","Дата реєстрації замовлення","Індекс виконавця","Індекс замовника"]):
+        for idx, label_text in enumerate(["Індекс замовлення","Послуга","Дата реєстрації замовлення","Індекс менеджера"]):
             Label(window, text=label_text, background="#4f4f4f", foreground="white").grid(row=idx, column=0, padx=10, pady=5)
         
         proposals_id = Entry(window, width=10, justify='center')
         proposals_type = Entry(window, width=20)
         proposals_date = Entry(window, width=18, justify='center')
-        proposals_performers_id = Entry(window, width=10, justify='center')
-        proposals_client_id = Entry(window, width=10, justify='center')
+        proposals_manager_id = Entry(window, width=10, justify='center')
 
-        for idx, entry in enumerate([proposals_id,proposals_type,proposals_date,proposals_performers_id,proposals_client_id]):
+        for idx, entry in enumerate([proposals_id,proposals_type,proposals_date,proposals_manager_id]):
             entry.grid(row=idx, column=1, padx=10, pady=5)
         
         # Edit button
         edit_button.configure(command=lambda: (
-            entry_check([proposals_id.get(),proposals_type.get(),proposals_date.get(),proposals_performers_id.get(),proposals_client_id.get()]),
+            entry_check([proposals_id.get(),proposals_type.get(),proposals_date.get(),proposals_manager_id.get()]),
             root_connection.connect(),
-            root_connection.query(f"""UPDATE `proposals` SET `proposals_type` = '{proposals_type.get()}', `proposals_register_data` = '{proposals_date.get()}',
-                `performers_performers_id` = '{proposals_performers_id.get()}', `clients_data_client_id` = '{proposals_client_id}'
-                WHERE (`proposals_id` = '{proposals_id}');"""),
+            root_connection.query(f"""UPDATE `proposals` SET 
+                `proposal_type` = '{proposals_type.get()}',
+                `proposal_register_date` = '{proposals_date.get()}',
+                `manager_manager_id` = '{proposals_manager_id.get()}'
+                WHERE (`proposal_id` = '{proposals_id.get()}');""",True),
             window.destroy()
         ))
     
     elif table_name == tables_text[4]: # Performers
-        for idx, label_text in enumerate(["Індекс виконавця","Код замовника","Дата початку виконання"]):
-            Label(window, text=label_text, background="#4f4f4f", foreground="white").grid(row=idx, column=0, padx=10, pady=5)
         
-        performers_id = Entry(window, width=10, justify='center')
-        performers_clientcode = Entry(window, width=10, justify='center')
-        performers_startwork = Entry(window, width=18, justify='center')
+        performers_labels = ["Індекс виконавця","Ім'я та прізвище виконавця","Код замовлення","Початок виконання замовлення"]
+            
+        per_id_entry = Entry(window, width=12) # Performer id
+        per_name_entry = Entry(window, width=12) # Performer name and surname
+        per_number_proposal_entry = Entry(window, width=12) # Performer num to code entry
+        per_startwork_date_entry = Entry(window, width=18) # Performer startwork date entry
         
-        for idx, entry in enumerate([performers_id,performers_clientcode,performers_startwork]):
+        for idx, label_text in enumerate(performers_labels):
+            label = Label(window, text=label_text, background="#4f4f4f", foreground="white")
+            label.grid(row=idx, column=0, padx=10, pady=5)
+        
+        for idx, entry in enumerate([per_id_entry,per_name_entry,per_number_proposal_entry,per_startwork_date_entry]):
             entry.grid(row=idx, column=1, padx=10, pady=5)
-    
-        # Edit button
+        # Add button command
         edit_button.configure(command=lambda: (
-            entry_check([performers_id.get(),performers_clientcode.get(),performers_startwork.get()]),
+            entry_check([per_id_entry.get(),per_name_entry.get(),per_number_proposal_entry.get(),per_startwork_date_entry.get()]),
             root_connection.connect(),
-            root_connection.query(f"""UPDATE `performers` SET `performers_num_to_clientcode` = '{performers_clientcode.get()}',
-                                `performers_startwork_date` = '{performers_startwork.get()}' 
-                                WHERE (`performers_id` = '{performers_id.get()}');"""),
+            root_connection.query(f"""UPDATE `performers` SET 
+                            `performer_name` = '{per_name_entry.get().split()[0]}',
+                            `performer_surname` = '{per_name_entry.get().split()[1]}',
+                            `performer_number_proposal` = {per_number_proposal_entry.get()},
+                            `performer_startwork_date` = '{per_startwork_date_entry.get()}' 
+                            WHERE (`performer_id` = '{per_id_entry.get()}');""",True),
             window.destroy()
         ))
-    
+
     edit_button.place(anchor=S, relx=0.5, rely=0.95)

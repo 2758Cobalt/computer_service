@@ -19,18 +19,23 @@ class App:
         self.file_menubar = Menu(self.root)
         
         # Cascade
-        self.menu_tabs_labels = ["Менеджери","Клієнти","Прайслист","Замовлення","Виконавці","Виїздні роботи"]
+        self.menu_tabs_labels = ["Менеджери","Клієнти","Прайслист","Замовлення","Виконавці","     ","Працівники сервісу","Сума до сплати"]
         self.menu_commands = [
             (self.menu_tabs_labels[0], query_managers, tables[0]),
             (self.menu_tabs_labels[1], query_clients, tables[1]),
             (self.menu_tabs_labels[2], query_pricelist, tables[2]),
             (self.menu_tabs_labels[3], query_proposals, tables[3]),
-            (self.menu_tabs_labels[4], query_performers, tables[4])
+            (self.menu_tabs_labels[4], query_performers, tables[4]),
         ]
         
         for label, query, command in self.menu_commands:
             self.file_menubar.add_cascade(label=label, command=lambda q=query, c=command: self.menu_action(q, c))
-            
+
+        self.file_menubar.add_cascade(label="     ",state='disabled')
+        
+        self.file_menubar.add_cascade(label=self.menu_tabs_labels[6], command=lambda:self.menu_action(query_view_workers,tables[5]))
+        self.file_menubar.add_cascade(label=self.menu_tabs_labels[7], command=lambda:self.menu_action(query_view_summary,tables[6]))
+
         # Frames
         self.main_frame = Frame(self.root, bg="#3f3f3f")
         self.upper_btn_frame = Frame(self.root, bg="#3f3f3f")
@@ -76,7 +81,6 @@ class App:
         
     def menu_action(self, q_query, cmd):
         """Взаємодія з меню"""
-        global limit
         for btn in [self.add_item_btn, self.remove_item_btn, self.edit_item_btn]:
             btn.configure(state="normal")
         
@@ -102,14 +106,18 @@ class App:
                     tables_text[1]: query_managers,
                     tables_text[2]: query_pricelist,
                     tables_text[3]: query_proposals,
-                    tables_text[4]: query_performers
+                    tables_text[4]: query_performers,
+                    tables_text[5]: query_view_workers,
+                    tables_text[6]: query_view_summary
                 },
                 "DESC": {
                     tables_text[0]: query_clients_desc,
                     tables_text[1]: query_managers_desc,
                     tables_text[2]: query_pricelist_desc,
                     tables_text[3]: query_proposals_desc,
-                    tables_text[4]: query_performers_desc
+                    tables_text[4]: query_performers_desc,
+                    tables_text[5]: query_view_workers_desc,
+                    tables_text[6]: query_view_summary_desc
                 }
             }
             

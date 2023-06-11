@@ -1,9 +1,0 @@
-main.py 9:56:11 <--------------Start logging--------------->
-mysql_client.py 9:56:14 Login...
-['Cobalt', 'localhost:2525', 'Umsf_sqltutor', 'computer_service']
-mysql_client.py 9:56:15 Query: SELECT manager_id as "Індекс менеджера", manager_name as "Ім'я менеджера", manager_surname as "Прізвище менеджера" FROM manager order by manager_id ASC LIMIT 100;
-windows.py 9:56:16 Entry is empty
-mysql_client.py 9:56:17 Login...
-['Cobalt', 'localhost:2525', 'Umsf_sqltutor', 'computer_service']
-mysql_client.py 9:56:17 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 2
-main.py 9:56:21 Session is closed
