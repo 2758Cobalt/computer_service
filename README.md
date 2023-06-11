@@ -1,2 +1,2 @@
-# Sql_panel
-MySql app for course work
+# backup
+this branch stores a backup of the application
