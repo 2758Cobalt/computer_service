@@ -1,5 +1,0 @@
-main.py 16:36:56 <--------------Start logging--------------->
-mysql_client.py 16:37:8 Login...
-['Cobalt', 'localhost:2525', 'Umsf_sqltutor', 'computer_service']
-mysql_client.py 16:37:9 Query: SELECT `manager_id` AS "Індекс менеджера", `manager_name` AS "Ім'я менеджера", `manager_surname` AS "Прізвище менеджера", `clients_client_id` AS "Індекс клієнта" FROM manager order by manager_id ASC LIMIT 100;
-main.py 16:37:18 Session is closed

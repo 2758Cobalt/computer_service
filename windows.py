@@ -3,7 +3,7 @@ from mysql_client import *
 
 root_connection = MySql_connection(connection_data=[]) # default | test
 
-connect_config = ("Cobalt","localhost:2525","Umsf_sqltutor","computer_service") # Default variable
+connect_config = ("user","localhost:3306","","") # Default variable
 
 tables_text = ["clients","managers","pricelist","proposals","performers","view_1","view_2"]
     
