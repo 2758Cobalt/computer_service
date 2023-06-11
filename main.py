@@ -142,6 +142,7 @@ class App:
         except Error as e:
             l.error(f"Error {e}")
             self.root.quit()
+        
 
 if __name__ == "__main__":
     App()
