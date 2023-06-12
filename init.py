@@ -11,7 +11,7 @@ tables = ["managers","clients","pricelist","proposals","performers","view_1","vi
 
 # constains
 app_title = "Комп'ютер-Сервіс"
-app_resolution = [720,500]
+app_resolution = [820,500]
 app_screen = str(app_resolution[0]) + "x" + str(app_resolution[1]) # resolution
 limit = 100 # limit
 

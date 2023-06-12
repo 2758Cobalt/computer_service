@@ -47,7 +47,7 @@ class App:
         self.name_table = Label(self.main_frame, text="Таблиця не вибрана", background="#4f4f4f", foreground="white")
         
         # Sort buttons
-        self.lower_text = ["Сортирувати за зростанням", "Сортирувати за спаданням", "limit"]
+        self.lower_text = ["Сортувати за зростанням", "Сортувати за спаданням", "limit"]
         self.sort_asc = Button(self.lower_buttons_frame, text=self.lower_text[0], width=len(self.lower_text[0]), command=lambda: self.sort("ASC")).grid(row=0, column=0, padx=5, pady=5)
         self.sort_desc = Button(self.lower_buttons_frame, text=self.lower_text[1], width=len(self.lower_text[1]), command=lambda: self.sort("DESC")).grid(row=0, column=1, padx=5, pady=5)
 
@@ -71,7 +71,7 @@ class App:
         
         for column, button in enumerate([self.reconnect_btn, self.add_item_btn, self.edit_item_btn, self.remove_item_btn, self.info]):
             
-            button.grid(row=0, column=column, padx=5, pady=5, sticky=EW)
+            button.grid(row=0, column=column, ipadx=10, padx=5, pady=5, sticky=EW)
         
         # Configure
         self.root.protocol("WM_DELETE_WINDOW", lambda: self.close_session()) # Event for close window
@@ -96,7 +96,7 @@ class App:
         return self.current_table
     
     def sort(self, type_sort):
-        """Сортирування таблиць"""
+        """Сортування таблиць"""
         if self.current_table == None:
             messagebox.showwarning("Увага","Таблиця не вибрана")
         else:
@@ -127,7 +127,7 @@ class App:
                     rewriting_arrays(self.sys_rows, self.sys_columns, root_connection.query(query))
                 else:
                     l.warning("Sort is invalid")
-                    messagebox.showerror("Помилка", "Сортирувати не можливо, таблиці не існує")
+                    messagebox.showerror("Помилка", "Сортувати не можливо, таблиці не існує")
             else:
                 l.warning("Table has't been selected")
                 messagebox.showerror("Помилка", "Таблиця не вибрана")

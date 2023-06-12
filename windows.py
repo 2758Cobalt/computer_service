@@ -72,6 +72,7 @@ def rewriting_arrays(rows, columns, connection):
     
     except Exception as e:
         l.error(f"Error overwriting data")
+
 # =============================================================
 
 def add_item(table_name):
@@ -80,7 +81,7 @@ def add_item(table_name):
         window = Tk("Додавання елементу")
         window.resizable(0, 0)
         window.title(f"Таблиця: {table_name}")
-        window.geometry("512x256+256+256")
+        window.geometry("412x256+256+256")
         window.configure(background="#2f2f2f")
         window.protocol("WM_DELETE_WINDOW", lambda: window.destroy())
         
@@ -91,16 +92,18 @@ def add_item(table_name):
             client_columns = ["Ім'я та прізвище клієнту", "Дата реєстрації", "Адреса клієнта", "Номер телефону"]
             
             for idx, label_text in enumerate(client_columns):
-                label = Label(window, text=label_text, background="#4f4f4f", foreground="white").grid(row=idx, column=0, padx=10, pady=5)
+                Label(window, text=label_text, background="#4f4f4f", foreground="white").grid(row=idx, column=0, padx=10, pady=5)
                 
-                client_name_entry = Entry(window, width=32) # Client name/surname entry
+                client_name_entry = Entry(window, width=24) # Client name/surname entry
                 client_reg_date_entry = Entry(window, width=18, justify='center')
                 client_address_entry = Entry(window, width=18, justify='center')
                 client_number_phone = Entry(window, width=18)
                 
                 for idx, entry in enumerate([client_name_entry, client_reg_date_entry, client_address_entry, client_number_phone]):
                     entry.grid(row=idx, column=1, pady=5)  # client name and surname
-
+                    
+                Label(window,text="Ім'я та прізвище треба ввести через пробіл", background="#2f2f2f", foreground="white").grid(row=4, columnspan=2, pady=20)
+                
                 # Add button command
                 add_button.configure(command=lambda: (
                     entry_check([client_name_entry.get(), client_reg_date_entry.get(), client_address_entry.get(), client_number_phone.get()]),
@@ -111,6 +114,8 @@ def add_item(table_name):
                         '{client_address_entry.get()}', '{client_number_phone.get()}')""",True),
                     window.destroy()
                 ))
+                
+                
 
         elif table_name == tables_text[1]: # Manager
             # Manager name/surname entry
@@ -122,6 +127,8 @@ def add_item(table_name):
             
             m_name_entry.grid(row=0, column=1, padx=10, pady=5)
             m_client_id_entry.grid(row=1, column=1, padx=10, pady=5)
+            
+            Label(window,text="Увага!\nІм'я та прізвище треба ввести через пробіл", background="#2f2f2f", foreground="white").grid(row=2,columnspan=2,pady=20)
 
             # Add button command
             add_button.configure(command=lambda: (
@@ -179,7 +186,8 @@ def add_item(table_name):
 
             for idx, entry in enumerate([pr_id_entry,pr_type_combo,pr_reg_date_entry,pr_manager_id_entry]):
                 entry.grid(row=idx, column=1, padx=10, pady=5)
-
+                
+            
             # Add button command
             add_button.configure(command=lambda: (
                 entry_check([pr_id_entry,pr_type_combo.get(),pr_reg_date_entry.get(),pr_manager_id_entry.get()]),
@@ -231,7 +239,7 @@ def delete_item(table_name):
         window = Tk("Видалення елементу")
         window.resizable(0, 0)
         window.title(f"Таблиця: {table_name}")
-        window.geometry("512x256+256+256")
+        window.geometry("312x128+256+256")
         window.configure(background="#2f2f2f")
         
         delete_button = Button(window, text="Видалити запис з таблиці") # delete button
@@ -240,7 +248,7 @@ def delete_item(table_name):
 
             Label(window, text="Введіть індекс(id) клієнту", background="#4f4f4f", foreground="white").grid(row=0, padx=10, pady=5)
             
-            client_id_entry = Entry(window)
+            client_id_entry = Entry(window, width=10)
             client_id_entry.grid(row=0, column=1, padx=10, pady=5)  # client name and surname
             
             # Delete button
@@ -256,7 +264,7 @@ def delete_item(table_name):
 
             Label(window, text="Введіть індекс(id) менеджера", background="#4f4f4f", foreground="white").grid(row=0, padx=10, pady=5)
             
-            manager_id_entry = Entry(window)
+            manager_id_entry = Entry(window, width=10)
             manager_id_entry.grid(row=0, column=1, padx=10, pady=5)  # client name and surname
             
             delete_button.configure(command=lambda: (
@@ -330,7 +338,7 @@ def edit_item(table_name):
     window = Tk("Зміна елементу")
     window.resizable(0, 0)
     window.title(f"Таблиця: {table_name}")
-    window.geometry("512x256+256+256")
+    window.geometry("412x256+256+256")
     window.configure(background="#2f2f2f")
     
     edit_button = Button(window, text="Змінити запис у таблиці") # edit button
@@ -349,6 +357,8 @@ def edit_item(table_name):
         
         for idx, entry in enumerate([client_id_entry,client_name_entry, client_reg_date_entry, client_address_entry, client_number_phone]):
             entry.grid(row=idx, column=1, pady=5)  # client name and surname
+            
+        Label(window,text="Увага!\nІм'я та прізвище треба ввести через пробіл", background="#2f2f2f", foreground="white").grid(row=5,columnspan=2,pady=20)
 
         edit_button.configure(command=lambda: (
             entry_check([client_id_entry.get(),client_name_entry.get(),client_reg_date_entry.get(),client_address_entry.get(),client_number_phone.get()]),
@@ -372,6 +382,8 @@ def edit_item(table_name):
         
         for idx, entry in enumerate([manager_id_entry,manager_name_entry,manager_client_id_entry]):
             entry.grid(row=idx, column=1, padx=10, pady=5)  
+        
+        Label(window,text="Увага!\nІм'я та прізвище треба ввести через пробіл", background="#2f2f2f", foreground="white").grid(row=4,columnspan=2,pady=20)
         
         edit_button.configure(command=lambda: (
             entry_check([manager_id_entry.get(),manager_name_entry.get()]),
